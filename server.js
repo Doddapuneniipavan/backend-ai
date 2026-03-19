@@ -25,7 +25,7 @@ app.post("/chat", async (req, res) => {
       messages: [
         { role: "user", content: userMessage }
       ],
-      model: "llama3-8b-8192",
+      model: "llama-3.1-8b-instant",
     });
 
     res.json({
