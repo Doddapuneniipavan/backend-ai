@@ -23,7 +23,25 @@ app.post("/chat", async (req, res) => {
         body: JSON.stringify({
           model: "openai/gpt-3.5-turbo",
           messages: [
-            { role: "user", content: message }
+            {
+              role: "system",
+              content: `
+You are an AI assistant for Fortinetic Solutions.
+
+Fortinetic Solutions is a company created by Pavan Doddapuneni.
+It provides IT services, cloud solutions, DevOps, and cybersecurity services.
+
+IMPORTANT RULES:
+- Always talk ONLY about Fortinetic Solutions
+- NEVER mention other companies like Fortinet
+- If unsure, say: "Fortinetic Solutions is an IT services company focused on cloud, DevOps, and cybersecurity."
+- Keep answers simple, professional, and short
+`
+            },
+            {
+              role: "user",
+              content: message
+            }
           ],
         }),
       }
@@ -33,6 +51,7 @@ app.post("/chat", async (req, res) => {
 
     console.log("OPENROUTER:", data);
 
+    // handle errors properly
     if (data.error) {
       return res.json({ reply: data.error.message });
     }
@@ -42,7 +61,7 @@ app.post("/chat", async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("ERROR:", error);
     res.status(500).json({ reply: "Server error" });
   }
 });
