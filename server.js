@@ -10,13 +10,12 @@ app.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
 
-    // simple working reply (NO AI for now)
-    return res.json({
-      reply: "You said: " + message,
+    // TEMP TEST RESPONSE (to confirm deployment works)
+    res.json({
+      reply: "Backend updated successfully 🚀",
     });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ reply: "Server error" });
   }
 });
