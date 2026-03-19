@@ -21,7 +21,7 @@ app.post("/chat", async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "llama3-8b-8192",
+          model: "llama3-70b-8192",
           messages: [
             { role: "system", content: "You are a helpful AI assistant." },
             { role: "user", content: message },
@@ -32,7 +32,7 @@ app.post("/chat", async (req, res) => {
 
     const data = await response.json();
 
-    console.log("GROQ:", data);
+   console.log("FULL:", JSON.stringify(data, null, 2));
 
     const reply =
       data?.choices?.[0]?.message?.content || "No AI response";
