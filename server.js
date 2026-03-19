@@ -1,59 +1,49 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const Groq = require("groq-sdk");
 
-const app = express();
+dotenv.config();
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-const client = new Groq({
-  apiKey: process.env.GROQ_API_KEY
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-// TEST ROUTE
-app.get("/", (req, res) => {
-  res.send("API Running 🚀");
-});
-
-// ✅ CHAT ROUTE (IMPORTANT)
 app.post("/chat", async (req, res) => {
   try {
-    const { message } = req.body;
+    const userMessage = req.body.message;
 
-    const completion = await client.chat.completions.create({
-      model: "llama3-8b-8192",
+    if (!userMessage) {
+      return res.json({ reply: "No message provided" });
+    }
+
+    const response = await groq.chat.completions.create({
       messages: [
-        {
-          role: "system",
-          content: `
-You are a professional assistant.
-
-Keep replies short, simple, and clear.
-Max 2 lines.
-`
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ]
+        { role: "user", content: userMessage }
+      ],
+      model: "llama3-70b-8192",
     });
 
-    const reply =
-      completion.choices[0]?.message?.content || "No response";
-
-    res.json({ reply });
+    res.json({
+      reply: response.choices[0].message.content,
+    });
 
   } catch (error) {
-    console.error("ERROR:", error.message);
-    res.json({ reply: "Backend error" });
+    console.error("REAL ERROR:", error);
+    res.json({ reply: error.message });
   }
+});
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log("Server running on port", PORT);
 });
