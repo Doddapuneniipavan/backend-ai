@@ -32,10 +32,10 @@ app.post("/chat", async (req, res) => {
 
     const data = await response.json();
 
-    console.log("GROQ RESPONSE:", data);
+    console.log("GROQ:", data);
 
     const reply =
-      data?.choices?.[0]?.message?.content || "No response from AI";
+      data?.choices?.[0]?.message?.content || "No AI response";
 
     res.json({ reply });
 
@@ -46,10 +46,11 @@ app.post("/chat", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Backend running");
+  res.send("Backend running 🚀");
 });
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
